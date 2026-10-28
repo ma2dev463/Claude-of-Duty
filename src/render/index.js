@@ -866,7 +866,9 @@ export class RenderSystem {
   // ==========================================================================
 
   resize(w, h, ctx) {
-    const pr = Math.min(globalThis.devicePixelRatio || 1, 1.5);
+    // UHD 770 is bandwidth-limited: avoid rendering a high-DPI backbuffer
+    // in the integrated-GPU preset. Higher quality presets retain capped HiDPI.
+    const pr = Math.min(globalThis.devicePixelRatio || 1, this.qLevel === 0 ? 1 : 1.5);
     this.renderer.setPixelRatio(pr);
     this.renderer.setSize(w, h, false);
 
